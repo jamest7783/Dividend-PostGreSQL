@@ -26,6 +26,7 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.20",
     "pg": "^8.8.0",
-    "sequelize": "^6.24.0"
+    "sequelize": "^6.24.0",
+    "yahoo-finance": "^0.3.7"
   }
 }

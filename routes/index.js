@@ -1,4 +1,8 @@
 const {Router}=require('express')
-const router=Router()
+const AppRouter=Router()
+const {createPortfolio}=require('../controllers')
 
-module.exports=router
+
+AppRouter.get('/portfolio/create',createPortfolio)
+
+module.exports=AppRouter
