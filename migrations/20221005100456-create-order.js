@@ -20,7 +20,7 @@ module.exports = {
       portfolioId: {
         type: Sequelize.INTEGER
       },
-      positionId: {
+      symbolId: {
         type: Sequelize.INTEGER
       },
       createdAt: {
