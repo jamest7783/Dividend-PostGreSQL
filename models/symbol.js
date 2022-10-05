@@ -4,9 +4,8 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Symbol extends Model {
-
     static associate(models) {
-      // define association here
+
     }
   }
   Symbol.init({
@@ -16,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Symbol',
+    tableName: 'symbols'
   });
   return Symbol;
 };
