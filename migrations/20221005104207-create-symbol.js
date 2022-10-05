@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Positions', {
+    await queryInterface.createTable('Symbols', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,11 +11,11 @@ module.exports = {
       symbol: {
         type: Sequelize.STRING
       },
-      numShares: {
-        type: Sequelize.INTEGER
-      },
-      avgPriceShare: {
+      lastPrice: {
         type: Sequelize.FLOAT
+      },
+      iconUrl: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -28,6 +28,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Positions');
+    await queryInterface.dropTable('Symbols');
   }
 };

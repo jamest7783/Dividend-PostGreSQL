@@ -5,7 +5,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
     static associate(models) {
-      // define association here
+      
     }
   }
   Order.init({
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     numShares: DataTypes.INTEGER,
     priceShare: DataTypes.FLOAT,
     portfolioId: DataTypes.INTEGER,
-    positionId: DataTypes.INTEGER
+    symbolId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Order',

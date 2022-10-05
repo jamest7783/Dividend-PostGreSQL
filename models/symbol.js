@@ -3,18 +3,19 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Position extends Model {
+  class Symbol extends Model {
+
     static associate(models) {
-     
+      // define association here
     }
   }
-  Position.init({
+  Symbol.init({
     symbol: DataTypes.STRING,
-    numShares: DataTypes.INTEGER,
-    avgPriceShare: DataTypes.FLOAT
+    lastPrice: DataTypes.FLOAT,
+    iconUrl: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'Position',
+    modelName: 'Symbol',
   });
-  return Position;
+  return Symbol;
 };
