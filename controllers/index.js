@@ -1,13 +1,13 @@
-const {Portfolio,Order,Symbol}='../models'
+const {Portfolio,Order,Symbol}=require('../models')
 const YF=require('yahoo-finance')
 
 
-const createPortfolio=(req,res)=>{
+const createPortfolio=async (req,res)=>{
     try{
-        res.status(200).json({msg:'hello'})
-    }catch(error){
-        res.status(200).json({msg:'error'})
-    }
+        const {ownerId,name,description,liquidCapital}=req.body
+        const portfolio=await Portfolio.create({ownerId,name,description,liquidCapital})
+        res.status(200).json(portfolio)
+    }catch(error){throw error}
 }
 
 
