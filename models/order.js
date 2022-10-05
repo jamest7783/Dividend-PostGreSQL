@@ -7,7 +7,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {}
   }
   Order.init({
-    date: DataTypes.DATE,
     numShares: DataTypes.INTEGER,
     priceShare: DataTypes.FLOAT,
     portfolioId:{
