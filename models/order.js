@@ -4,16 +4,26 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
-    static associate(models) {
-      
-    }
+    static associate(models) {}
   }
   Order.init({
     date: DataTypes.DATE,
     numShares: DataTypes.INTEGER,
     priceShare: DataTypes.FLOAT,
-    portfolioId: DataTypes.INTEGER,
-    symbolId: DataTypes.INTEGER
+    portfolioId:{
+      type:DataTypes.INTEGER,
+      references:{
+        model:'portfolios',
+        key:'id'
+      }
+    },
+    symbolId:{
+      type:DataTypes.INTEGER,
+      references:{
+        model:'symbols',
+        key:'id'
+      }
+    }
   }, {
     sequelize,
     modelName: 'Order',

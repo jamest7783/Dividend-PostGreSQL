@@ -5,13 +5,20 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Symbol extends Model {
     static associate(models) {
-
+      Symbol.belongsToMany(models.Portfolio,{
+        through:'orders',
+        as:'symbols',
+        foreignKey:'symbolId'
+      })
     }
   }
   Symbol.init({
     symbol: DataTypes.STRING,
     lastPrice: DataTypes.FLOAT,
-    iconUrl: DataTypes.STRING
+    iconUrl:{
+      type:DataTypes.STRING,
+      defaultValue:''
+    }
   }, {
     sequelize,
     modelName: 'Symbol',
