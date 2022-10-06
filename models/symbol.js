@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Symbol.init({
     symbol: DataTypes.STRING,
+    companyName: DataTypes.STRING,
     lastPrice: DataTypes.FLOAT,
     iconUrl:{
       type:DataTypes.STRING,

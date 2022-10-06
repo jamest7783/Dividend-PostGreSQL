@@ -43,60 +43,40 @@ const GetSymbolIcon=async (req,res)=>{
     }
     else{res.status(200).json({alert:'Symbol Not listed on NASDAQ, NYSE or AMEX'})}
 }
-
-
-const getSymbolIcon=async (symbol)=>{
-    if(allSymbols.includes(symbol)){
-        await YahooFinance.quote({
-            symbol,modules:['price','summaryDetail']
-        },function(error,summary){
-            let company=summary.price.longName
-            if(company.includes(',')){company=company.split(',')[0]}
-            if(company.includes('.')){company=company.split('.')[0]}
-            if(company.includes('Inc')){company=company.split('Inc')[0]}
-            if(company.includes('Company')){company=company.split('Company')[0]}
-            if(company.includes('Growth')){company=company.split('Growth')[0]}
-            if(company.includes('Limited')){company=company.split('Limited')[0]}
-            if(company.includes('Motor')){company=company.split('Motor')[0]}
-            company=company.trim()
-            IconTool.suggestions(company).then((companies)=>{
-                if(companies[0]){
-                    return 'bbb'
-                }
-                else{
-                    return 'bbb'
-                }
-            })
-        })
-    }
-}
-
-
-
-
 const findOrCreateSymbol=async (req,res)=>{
     let {symbol}=req.body
     symbol=symbol.toUpperCase()
-    let foundSymbol=await Symbol.findOne({where:{symbol}})
-    // if(foundSymbol){res.status(200).json(foundSymbol)}
-    let newSymbol=await getSymbolIcon('TSLA')
-    res.status(200).json({newSym:newSymbol})
-
-
-
-
-
-        // const createSymbol=async ()=>{
-        //     let newSymbol
-        //     return newSymbol=await Symbol.create({symbol,lastPrice:0,iconUrl:await getSymbolIcon(symbol)})
-        // }
-        // res.status(200).json(await createSymbol())
-    
-    
-
-    
-    
+    const foundSymbol=await Symbol.findOne({where:{symbol}})
+    if(foundSymbol){res.status(200).json({foundSymbol})}
+    else{
+        if(allSymbols.includes(symbol)){
+            await YahooFinance.quote({
+                symbol,modules:['price','summaryDetail']
+            },async function(error,summary){
+                let companyName=summary.price.longName
+                if(companyName.includes(',')){companyName=companyName.split(',')[0]}
+                if(companyName.includes('.')){companyName=companyName.split('.')[0]}
+                if(companyName.includes('Inc')){companyName=companyName.split('Inc')[0]}
+                if(companyName.includes('Company')){companyName=companyName.split('Company')[0]}
+                if(companyName.includes('Growth')){companyName=companyName.split('Growth')[0]}
+                if(companyName.includes('Limited')){companyName=companyName.split('Limited')[0]}
+                if(companyName.includes('Motor')){companyName=companyName.split('Motor')[0]}
+                companyName=companyName.trim()
+                IconTool.suggestions(companyName).then(async (companyNames)=>{
+                    const newSymbol=await Symbol.create({
+                        symbol,
+                        companyName,
+                        iconUrl:companyNames[0].logo,
+                        lastPrice:summary.summaryDetail.previousClose
+                    })
+                    res.status(200).json({newSymbol})               
+                })
+            })
+        }
+        else{res.status(200).json({alert:'symbol NOT listed on NASDAQ, NYSE or AMEX'})}
+    }
 }
+
 
 
 
@@ -213,7 +193,6 @@ module.exports={
     createPortfolio,
     createOrder,
     getAllPortfolioOrders,
-    getSymbolIcon,
     findOrCreateSymbol
 }
 

@@ -4,7 +4,6 @@ const {
     createPortfolio,
     createOrder,
     getAllPortfolioOrders,
-    getSymbolIcon,
     findOrCreateSymbol
 }=require('../controllers')
 
@@ -15,6 +14,5 @@ AppRouter.get('/portfolio/orders',getAllPortfolioOrders)
 
 AppRouter.get('/symbol',findOrCreateSymbol)
 
-AppRouter.get('/symbol/icon',getSymbolIcon)
 
 module.exports=AppRouter

@@ -11,6 +11,9 @@ module.exports = {
       symbol: {
         type: Sequelize.STRING
       },
+      companyName: {
+        type: Sequelize.STRING
+      },
       lastPrice: {
         type: Sequelize.FLOAT
       },
