@@ -12,37 +12,90 @@ const createPortfolio=async (req,res)=>{
         res.status(200).json(portfolio)
     }catch(error){throw error}
 }
-
-
-const getSymbolIcon=async (req,res)=>{
+const GetSymbolIcon=async (req,res)=>{
     let {symbol}=req.body
     symbol=symbol.toUpperCase()
     if(allSymbols.includes(symbol)){
         await YahooFinance.quote({
             symbol,modules:['price','summaryDetail']
         },function(error,summary){
-            if(!summary){res.status(200).json({alert:'Ticker not found <---.'})}
-            if(error){throw error}
-            else{
-                try{
-                    let company=summary.price.longName
-                    if(company.includes(',')){company=company.split(',')[0]}
-                    if(company.includes('.')){company=company.split('.')[0]}
-                    if(company.includes('Inc')){company=company.split('Inc')[0]}
-                    if(company.includes('Company')){company=company.split('Company')[0]}
-                    if(company.includes('Growth')){company=company.split('Growth')[0]}
-                    if(company.includes('Limited')){company=company.split('Limited')[0]}
-                    if(company.includes('Motor')){company=company.split('Motor')[0]}
-                    company=company.trim()
-                    IconTool.suggestions(company).then((companies)=>{
-                    if(companies[0]){res.status(200).json({logo:companies[0].logo})}
-                    else{res.status(200).json({alert:'Logo not found.'})}
-                    })
-                }catch(error){res.status(200).json({alert:'Logo not found.'})}
+            if(error){
+                res.status(200).json({alert:'Logo not found.'})
             }
+            let company=summary.price.longName
+            if(company.includes(',')){company=company.split(',')[0]}
+            if(company.includes('.')){company=company.split('.')[0]}
+            if(company.includes('Inc')){company=company.split('Inc')[0]}
+            if(company.includes('Company')){company=company.split('Company')[0]}
+            if(company.includes('Growth')){company=company.split('Growth')[0]}
+            if(company.includes('Limited')){company=company.split('Limited')[0]}
+            if(company.includes('Motor')){company=company.split('Motor')[0]}
+            company=company.trim()
+            IconTool.suggestions(company).then((companies)=>{
+                if(companies[0]){
+                    res.status(200).json({logo:companies[0].logo})
+                }
+                else{
+                    res.status(200).json({alert:'Logo not found.'})
+                }
+            })
         })
     }
-    else{res.status(200).json({alert:'DO NOT got it!'})}
+    else{res.status(200).json({alert:'Symbol Not listed on NASDAQ, NYSE or AMEX'})}
+}
+
+
+const getSymbolIcon=async (symbol)=>{
+    if(allSymbols.includes(symbol)){
+        await YahooFinance.quote({
+            symbol,modules:['price','summaryDetail']
+        },function(error,summary){
+            let company=summary.price.longName
+            if(company.includes(',')){company=company.split(',')[0]}
+            if(company.includes('.')){company=company.split('.')[0]}
+            if(company.includes('Inc')){company=company.split('Inc')[0]}
+            if(company.includes('Company')){company=company.split('Company')[0]}
+            if(company.includes('Growth')){company=company.split('Growth')[0]}
+            if(company.includes('Limited')){company=company.split('Limited')[0]}
+            if(company.includes('Motor')){company=company.split('Motor')[0]}
+            company=company.trim()
+            IconTool.suggestions(company).then((companies)=>{
+                if(companies[0]){
+                    return 'bbb'
+                }
+                else{
+                    return 'bbb'
+                }
+            })
+        })
+    }
+}
+
+
+
+
+const findOrCreateSymbol=async (req,res)=>{
+    let {symbol}=req.body
+    symbol=symbol.toUpperCase()
+    let foundSymbol=await Symbol.findOne({where:{symbol}})
+    // if(foundSymbol){res.status(200).json(foundSymbol)}
+    let newSymbol=await getSymbolIcon('TSLA')
+    res.status(200).json({newSym:newSymbol})
+
+
+
+
+
+        // const createSymbol=async ()=>{
+        //     let newSymbol
+        //     return newSymbol=await Symbol.create({symbol,lastPrice:0,iconUrl:await getSymbolIcon(symbol)})
+        // }
+        // res.status(200).json(await createSymbol())
+    
+    
+
+    
+    
 }
 
 
@@ -160,7 +213,8 @@ module.exports={
     createPortfolio,
     createOrder,
     getAllPortfolioOrders,
-    getSymbolIcon
+    getSymbolIcon,
+    findOrCreateSymbol
 }
 
 
