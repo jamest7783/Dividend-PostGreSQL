@@ -12227,3 +12227,6 @@ const amexSymbols=[
     "ZROZ",
     "ZSL"
 ]
+
+const allSymbols=[...nasdaqSymbols,...nyseSymbols,...amexSymbols]
+module.exports={allSymbols}

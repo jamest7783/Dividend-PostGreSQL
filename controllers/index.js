@@ -1,8 +1,9 @@
 const {Portfolio,Order,Symbol}=require('../models')
 const YahooFinance=require('yahoo-finance')
-const GoogleNewsAPI = require("google-news-json");
+const GoogleNewsAPI = require('google-news-json')
 const ClearbitLogo=require('clearbit-logo')
 const IconTool=new ClearbitLogo
+const {allSymbols}=require('./listedSymbols')
 
 const createPortfolio=async (req,res)=>{
     try{
@@ -14,30 +15,34 @@ const createPortfolio=async (req,res)=>{
 
 
 const getSymbolIcon=async (req,res)=>{
-    const {symbol}=req.body
-    await YahooFinance.quote({
-        symbol,modules:['price','summaryDetail']
-    },function(error,summary){
-        if(!summary){res.status(200).json({alert:'Ticker not found <---.'})}
-        if(error){throw error}
-        else{
-            try{
-                let company=summary.price.longName
-                if(company.includes(',')){company=company.split(',')[0]}
-                if(company.includes('.')){company=company.split('.')[0]}
-                if(company.includes('Inc')){company=company.split('Inc')[0]}
-                if(company.includes('Company')){company=company.split('Company')[0]}
-                if(company.includes('Growth')){company=company.split('Growth')[0]}
-                if(company.includes('Limited')){company=company.split('Limited')[0]}
-                if(company.includes('Motor')){company=company.split('Motor')[0]}
-                company=company.trim()
-                IconTool.suggestions(company).then((companies)=>{
-                   if(companies[0]){res.status(200).json({logo:companies[0].logo})}
-                   else{res.status(200).json({alert:'Logo not found.'})}
-                })
-            }catch(error){res.status(200).json({alert:'Logo not found.'})}
-        }
-    })
+    let {symbol}=req.body
+    symbol=symbol.toUpperCase()
+    if(allSymbols.includes(symbol)){
+        await YahooFinance.quote({
+            symbol,modules:['price','summaryDetail']
+        },function(error,summary){
+            if(!summary){res.status(200).json({alert:'Ticker not found <---.'})}
+            if(error){throw error}
+            else{
+                try{
+                    let company=summary.price.longName
+                    if(company.includes(',')){company=company.split(',')[0]}
+                    if(company.includes('.')){company=company.split('.')[0]}
+                    if(company.includes('Inc')){company=company.split('Inc')[0]}
+                    if(company.includes('Company')){company=company.split('Company')[0]}
+                    if(company.includes('Growth')){company=company.split('Growth')[0]}
+                    if(company.includes('Limited')){company=company.split('Limited')[0]}
+                    if(company.includes('Motor')){company=company.split('Motor')[0]}
+                    company=company.trim()
+                    IconTool.suggestions(company).then((companies)=>{
+                    if(companies[0]){res.status(200).json({logo:companies[0].logo})}
+                    else{res.status(200).json({alert:'Logo not found.'})}
+                    })
+                }catch(error){res.status(200).json({alert:'Logo not found.'})}
+            }
+        })
+    }
+    else{res.status(200).json({alert:'DO NOT got it!'})}
 }
 
 
