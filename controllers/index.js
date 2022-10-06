@@ -63,10 +63,12 @@ const findOrCreateSymbol=async (req,res)=>{
                 if(companyName.includes('Motor')){companyName=companyName.split('Motor')[0]}
                 companyName=companyName.trim()
                 IconTool.suggestions(companyName).then(async (companyNames)=>{
+                    let iconUrl=companyNames.logo?companyNames[0].logo:'Logo Not Found.'
+                    console.log(companyNames)
                     const newSymbol=await Symbol.create({
                         symbol,
                         companyName,
-                        iconUrl:companyNames[0].logo,
+                        iconUrl,
                         lastPrice:summary.summaryDetail.previousClose
                     })
                     res.status(200).json({newSymbol})               
