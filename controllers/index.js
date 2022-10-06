@@ -1,8 +1,8 @@
 const {Portfolio,Order,Symbol}=require('../models')
-const yahooFinance=require('yahoo-finance')
-const googleNewsAPI = require("google-news-json");
-const clearbitLogo=require('clearbit-logo')
-
+const YahooFinance=require('yahoo-finance')
+const GoogleNewsAPI = require("google-news-json");
+const ClearbitLogo=require('clearbit-logo')
+const IconTool=new ClearbitLogo
 
 const createPortfolio=async (req,res)=>{
     try{
@@ -13,31 +13,9 @@ const createPortfolio=async (req,res)=>{
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-let logo=new clearbitLogo
-
-const getLogo=async (req,res)=>{
+const getSymbolIcon=async (req,res)=>{
     const {symbol}=req.body
-    await yahooFinance.quote({
+    await YahooFinance.quote({
         symbol,modules:['price','summaryDetail']
     },function(error,summary){
         if(error){throw error}
@@ -53,7 +31,7 @@ const getLogo=async (req,res)=>{
                 if(company.includes('Limited')){company=company.split('Limited')[0]}
                 if(company.includes('Motor')){company=company.split('Motor')[0]}
                 company=company.trim()
-                logo.suggestions(company).then((companies)=>{
+                IconTool.suggestions(company).then((companies)=>{
                    if(companies[0]){res.status(200).json({logo:companies[0].logo})}
                    else{res.send('Logo not found - empty array')}
                 })
@@ -176,5 +154,6 @@ const getAllPortfolioOrders=async (req,res)=>{
 module.exports={
     createPortfolio,
     createOrder,
-    getAllPortfolioOrders
+    getAllPortfolioOrders,
+    getSymbolIcon
 }
