@@ -18,8 +18,8 @@ const getSymbolIcon=async (req,res)=>{
     await YahooFinance.quote({
         symbol,modules:['price','summaryDetail']
     },function(error,summary){
+        if(!summary){res.status(200).json({alert:'Ticker not found <---.'})}
         if(error){throw error}
-        if(!summary){res.status(200).json({alert:'Ticker not found.'})}
         else{
             try{
                 let company=summary.price.longName
@@ -33,9 +33,9 @@ const getSymbolIcon=async (req,res)=>{
                 company=company.trim()
                 IconTool.suggestions(company).then((companies)=>{
                    if(companies[0]){res.status(200).json({logo:companies[0].logo})}
-                   else{res.send('Logo not found - empty array')}
+                   else{res.status(200).json({alert:'Logo not found.'})}
                 })
-            }catch(error){res.send('Logo not found - empty array')}
+            }catch(error){res.status(200).json({alert:'Logo not found.'})}
         }
     })
 }
@@ -157,3 +157,6 @@ module.exports={
     getAllPortfolioOrders,
     getSymbolIcon
 }
+
+
+
